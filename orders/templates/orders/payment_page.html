@@ -1,0 +1,20 @@
+<h2>Complete Payment</h2>
+<button id="rzp-button">Pay ₹{{ amount }}</button>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    const options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount|floatformat:2|floatformat:0 }}00",
+        "currency": "INR",
+        "name": "Your Store Name",
+        "order_id": "{{ razorpay_order_id }}",
+        "handler": function (response) {
+            window.location.href = `/orders/payment-success/?payment_id=${response.razorpay_payment_id}&order_id={{ order.id }}`;
+        }
+    };
+    const rzp = new Razorpay(options);
+    document.getElementById("rzp-button").onclick = function () {
+        rzp.open();
+    };
+</script>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Orders - E-commerce Store</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <ul>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'orders' %}">Your Orders</a></li>
+      <li><a href="{% url 'login' %}">Login</a></li>
+      <li><a href="{% url 'signup' %}">Signup</a></li>
+      <li><a href="{% url 'cart' %}">Cart</a></li>
+    </ul>
+  </nav>
+
+  <!-- Orders List -->
+  <section id="orders-list">
+    <h2>Your Orders</h2>
+    <ul>
+      {% for order in orders %}
+        <li>
+          <a href="{% url 'order_detail' order.id %}">
+            Order #{{ order.id }} - Status: {{ order.status }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Your E-commerce Store. All rights reserved.</p>
+  </footer>
+</body>
+</html>

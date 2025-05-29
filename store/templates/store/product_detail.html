@@ -1,0 +1,63 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - E-commerce Store</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'store:product-list' %}">All Products</a></li>
+        </ul>
+    </nav>
+
+ <section id="product-detail">
+    <h1>{{ product.name }}</h1>
+
+
+
+<!-- Variant Selector -->
+{% if product.variants %}
+    <img src="{{ selected_variant.image_url|safe }}" height="100" width="100" alt="{{ product.name }}" class="product-image">
+    <p>{{ product.description }}</p>
+    <form method="POST" action="{% url 'store:product-detail' slug=product.slug %}">
+        {% csrf_token %}
+        <label for="variant-select">Choose Variant:</label>
+        <select name="variant_index" id="variant-select">
+            {% for variant in product.variants %}
+                <option value="{{ forloop.counter0 }}" {% if forloop.counter0 == selected_index %}selected{% endif %}>
+                    {{ variant.variant_id }} - ₹{{ variant.price }} ({{ variant.stock }} in stock)
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">View Variant</button>
+    </form>
+{% endif %}
+
+<!-- Variant Info -->
+{% if selected_variant %}
+    <p>Price: ₹{{ selected_variant.price }}</p>
+    <p>Stock: {{ selected_variant.stock }}</p>
+
+    <form method="POST" action="{% url 'store:add-to-cart' product.product_id %}">
+        {% csrf_token %}
+        <input type="hidden" name="variant_id" value="{{ selected_variant.variant_id }}">
+        <button type="submit">Add to Cart</button>
+    </form>
+{% endif %}
+<!-- Product card snippet -->
+    <form method="POST" action="{% url 'store:add-to-compare' %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+        <button type="submit">Add to Compare</button>
+    </form>
+<!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Your E-commerce Store. All rights reserved.</p>
+    </footer>
+</body>
+</html>

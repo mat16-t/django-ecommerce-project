@@ -1,0 +1,5 @@
+<form method="post" action="{% url 'delete-profile' %}">
+  {% csrf_token %}
+  <p>Are you sure you want to delete your profile info? Your order history will be retained.</p>
+  <button type="submit">Confirm Delete</button>
+</form>

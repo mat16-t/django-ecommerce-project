@@ -1,0 +1,63 @@
+<!-- templates/store/compare.html -->
+<h2>Product Comparison</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Attribute</th>
+            {% for product in products %}
+                <th>{{ product.name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Brand</td>
+            {% for product in products %}
+                <td>{{ product.brand }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Price</td>
+            {% for product in products %}
+                <td>₹{{ product.variants.0.price }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Color</td>
+            {% for product in products %}
+                <td>{{ product.variants.0.color }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Storage</td>
+            {% for product in products %}
+                <td>{{ product.variants.0.storage }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Specifications</td>
+            {% for product in products %}
+                <td>{{ product.specifications }}</td>
+            {% endfor %}
+        </tr>
+        <!-- Add more rows as needed -->
+        <tr>
+            <td>Remove</td>
+            {% for product in products %}
+                <td>
+                    <form action="{% url 'store:remove-from-compare' product.product_id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="close-btn" title="Remove from compare">✖</button>
+                    </form>
+                </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+    
+</table>
+{% if products %}
+<a href="{% url 'store:product-detail' products.0.product_id %}">
+    <button>Back</button>
+</a>
+{% endif %}

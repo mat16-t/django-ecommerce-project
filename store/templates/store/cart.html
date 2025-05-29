@@ -1,0 +1,53 @@
+<h2>Your Cart</h2>
+<table>
+  <thead>
+    <tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items %}
+    <tr data-product-id="{{ item.product_id }}">
+      <td>{{ item.product_name }}</td>
+      <td>
+        <button class="qty-btn" data-action="decrease">-</button>
+        <span class="qty">{{ item.quantity }}</span>
+        <button class="qty-btn" data-action="increase">+</button>
+      </td>
+      <td>₹{{ item.price|floatformat:2 }}</td>
+      <td class="subtotal">₹{{ item.subtotal|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p><strong>Total:</strong> ₹<span id="cart-total">{{ total|floatformat:2 }}</span></p>
+<form method="POST" action="{% url 'orders:place-order' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Place Order</button>
+</form>
+<button onclick="history.back()">Back</button>
+<script>
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const row = this.closest('tr');
+        const productId = row.getAttribute('data-product-id');
+        const action = this.getAttribute('data-action');
+
+  
+        fetch("{% url 'store:update-cart' %}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+          body: `product_id=${productId}&action=${action}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          row.querySelector('.qty').innerText = data.quantity;
+          row.querySelector('.subtotal').innerText = `₹${data.subtotal}`;
+          document.getElementById('cart-total').innerText = data.total;
+        })
+        .catch(err => console.error("AJAX error"))
+      });
+    });
+  </script>

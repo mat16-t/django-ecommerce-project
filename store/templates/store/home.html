@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home | My E-Commerce</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            {% if user.is_authenticated %}
+                <div class="navbar">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                    <div class="profile">
+                        {% if avatar_url %}
+                            <img src="{{ avatar_url }}" alt="Profile Avatar" class="profile-avatar">
+                        {% else %}
+                            <div class="profile-avatar-placeholder">No Avatar</div>
+                        {% endif %}
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <a href="{% url 'users:profile' %}">Profile</a>
+                    <a href="{% url 'store:view-cart' %}">View Cart</a>
+                    <a href="{% url 'orders:view-order' %}">Orders</a>
+                </div>
+            {% else %}
+                <div class="navbar">
+                    <a href="{% url 'users:user_login' %}">Login</a>
+                </div>
+                {% if messages %}
+                document.addEventListener("DOMContentLoaded", function () {
+                {% for message in messages %}
+                    alert("{{ message|escapejs }}");
+                {% endfor %}
+                });
+                {% endif %}
+            {% endif %}
+            <form method="get" action="{% url 'store:product-search' %}">
+                <input type="text" name="q" placeholder="Search products...">
+                <button type="submit">Search</button>
+            </form>
+        </nav>
+    </header>
+    <a href="{% url 'store:product-list' %}">Filter Products</a>
+    <!-- Categories -->
+    <section>
+        <h2>Categories</h2>
+        <ul>
+            {% for category in categories %}
+                <li><a href="{% url 'store:category-products' category.slug %}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 My E-Commerce Site</p>
+    </footer>
+</body>
+</html>

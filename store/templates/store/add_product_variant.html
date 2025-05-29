@@ -1,0 +1,24 @@
+{ % extends "store/add_product.html"}
+{% block content %}
+<h2>Items</h2>
+<form method="POST" action="{% url 'store:add-product-variant' product.product_id %}">
+    {% csrf_token %}
+    
+    <!-- You can repeat this block multiple times using JS or backend loop -->
+    <div class="variant-block">
+        <label for="storage">Storage:</label>
+        <input type="text" name="storage" required>
+
+        <label for="ram">RAM:</label>
+        <input type="text" name="ram" required>
+
+        <label for="price">Price:</label>
+        <input type="number" name="price" required>
+
+        <label for="stock">Stock:</label>
+        <input type="number" name="stock" required>
+    </div>
+
+    <button type="submit">Add Variant</button>
+</form>
+{% endblock %}

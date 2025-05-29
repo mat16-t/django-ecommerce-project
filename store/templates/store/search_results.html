@@ -1,0 +1,81 @@
+{% if error %}
+    <p style="color: red;">Error: {{ error }}</p>
+{% endif %}
+<a href="{% url 'store:home' %}">Home</a>
+<form method="get" action="{% url 'store:product-search' %}">
+
+    <input type="text" id="search-input" name="q" placeholder="Search products..." autocomplete="off">
+    <ul id="suggestions-list" style="border: 1px solid #ccc; display: none; position: absolute; background: white; list-style: none; padding: 0; margin-top: 0;"></ul>
+
+    <button type="submit">Search</button>
+</form>
+<h2>Search Results for "{{ query }}"</h2>
+<ul>
+    {% for hit in results %}
+        {% with product=hit.document %}
+            <li>
+                <strong><a href="{% url 'store:product-detail' product.slug %}">{{ product.name }}</a></strong><br>
+                Brand: {{ product.brand }}<br>
+                Price: ₹{{ product.price }}<br>
+                Description: {{ product.description|truncatewords:15 }}
+            </li>
+        {% endwith %}
+    {% empty %}
+        <li>No products found.</li>
+    {% endfor %}
+</ul>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsList = document.getElementById('suggestions-list');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.trim();
+
+        if (query.length === 0) {
+            suggestionsList.style.display = 'none';
+            return;
+        }
+
+        fetch(`/store/api/suggest/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                const suggestions = data.suggestions || [];
+
+                suggestionsList.innerHTML = '';
+                if (suggestions.length > 0) {
+                    suggestions.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        li.textContent = suggestion;
+                        li.style.padding = '5px';
+                        li.style.cursor = 'pointer';
+
+                        li.addEventListener('click', () => {
+                            searchInput.value = suggestion;
+                            suggestionsList.style.display = 'none';
+                            searchInput.form.submit();  // auto-submit on click
+                        });
+
+                        suggestionsList.appendChild(li);
+                    });
+
+                    suggestionsList.style.display = 'block';
+                } else {
+                    suggestionsList.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching suggestions:', error);
+                suggestionsList.style.display = 'none';
+            });
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!suggestionsList.contains(e.target) && e.target !== searchInput) {
+            suggestionsList.style.display = 'none';
+        }
+    });
+});
+</script>

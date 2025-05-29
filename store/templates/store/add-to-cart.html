@@ -1,0 +1,10 @@
+{% extends "store/product_detail.html" %}
+{% block content %}
+<h2>Your Cart</h2>
+<ul>
+  {% for item in cart_items %}
+    <li>{{ item.get_product().name }} - Quantity: {{ item.quantity }} - Subtotal: ₹{{ item.product.price|floatformat:2 }}</li>
+  {% endfor %}
+</ul>
+<p>Total: ₹{{ total }}</p>
+{% endblock %}

@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - E-commerce Store</title>
+  <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <ul>
+      <li><a href="{% url 'store:home' %}">Home</a></li>
+      <li><a href="{% url 'users:signup' %}">Signup</a></li>
+    </ul>
+  </nav>
+
+  <!-- Login Form -->
+  <section id="login-form">
+    <h2>Login to Your Account</h2>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" required>
+      
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <!-- Google Login -->
+    {% load socialaccount %}
+    <a href="{% provider_login_url 'google' %}?next={% url 'home' %}">Login via Google</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Your E-commerce Store. All rights reserved.</p>
+  </footer>
+</body>
+</html>

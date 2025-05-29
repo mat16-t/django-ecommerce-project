@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="{% url 'store:home' %}">Home</a>
+    <form method="get">
+        <select name="category">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}" {% if request.GET.category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+        <select name="brand">
+            <option value="">All Brands</option>
+            {% for b in brands %}
+                <option value="{{ b }}" {% if request.GET.brand == b %}selected{% endif %}>{{ b }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
+        <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+        <select name="storage">
+            <option value="">All Storages</option>
+            {% for s in storages %}
+                <option value="{{ s }}" {% if request.GET.storage == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="sort_by" id="">
+            <option value="">Price</option>
+            <option value="price_asc">Low to High</option>
+            <option value="price_desc">High to Low</option>
+        </select>
+
+        <!-- Color Dropdown -->
+        <select name="color">
+            <option value="">All Colors</option>
+            {% for c in colors %}
+                <option value="{{ c }}" {% if request.GET.color == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    {% if products %}
+    {% for product in products %}
+    <div>
+        <a href="{% url 'store:product-detail' slug=product.slug %}">{{ product.name }}</a>
+        <p>{{ product.category }} | {{ product.brand }}</p>
+        {% for variants in product.variants %}
+        <img src="{{ variants.image_url }}" height="100" width="100">
+        {% endfor %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No products found matching your filters.</p>
+    {% endif %}
+    
+</body>
+</html>

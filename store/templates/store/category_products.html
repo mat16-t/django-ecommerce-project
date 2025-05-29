@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category: {{ category.name }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Category: {{ category.name }}</h1>
+
+    <div class="product-list">
+      {% for product in products %}
+        <div class="product-item">
+            <h2><a href="{% url 'store:product-detail' product.slug %}">{{ product.name }}</a></h2>
+            {% if product.variants %}
+            <img src="{{ product.variants.0.image_url }}" height="100" width="100" alt="iphone">
+            {% endif %}
+            <p>{{ product.description }}</p>
+            <p>₹{{ product.variants.0.price }}</p>
+            <!-- Add to Cart button -->
+            <form method="POST" action="{% url 'store:add-to-cart' product.id %}">
+                {% csrf_token %}
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
+        {% empty %}
+        <p>No products found in this category.</p>
+      {% endfor %}
+    </div>
+    <button onclick="history.back()">Back</button>
+
+</body>
+</html>

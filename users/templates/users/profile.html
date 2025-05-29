@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label>Username:</label><br>
+            <input type="text" value="{{ user.username }}" readonly><br><br>
+    
+            <label>Email:</label><br>
+            <input type="email" name="email" value="{{ user.email }}"><br><br>
+    
+            <label>Phone Number:</label><br>
+            <input type="text" name="phone_number" value="{{ user.phone_number }}"><br><br>
+    
+            <label>Address:</label><br>
+            <textarea name="address" rows="4">{{ user.address }}</textarea><br><br>
+    
+            <label>Profile Picture:</label><br>
+            {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" width="100" height="100"><br>
+            {% endif %}
+            <input type="file" name="profile_picture"><br><br>
+    
+            <button type="submit">Update</button>
+        </form>
+        <a href="{% url 'users:delete-profile' %}">Delete Account</a>
+        <button onclick="history.back()">Back</button>
+    </div>
+</body>
+</html>

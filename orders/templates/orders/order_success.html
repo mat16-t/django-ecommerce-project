@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <a href="{% url 'store:home' %}">Home</a>
+  {% block content %}
+  <h2>Order Placed Successfully!</h2>
+  <p>Your order ID is <strong>#{{ order.id }}</strong></p>
+  <p>Total amount: ₹{{ order.total_amount }}</p>  
+  {% endblock %}
+</body>
+</html>
+

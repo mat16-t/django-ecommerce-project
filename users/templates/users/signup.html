@@ -1,0 +1,49 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - E-commerce Store</title>
+  <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <ul>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'user_login' %}">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Signup Form -->
+  <section id="signup-form">
+    <h2>Create an Account</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p}}
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <!-- Google Login -->
+     {% load socialaccount %}
+    <a href="{% provider_login_url 'google' %}?next={% url 'home' %}">Login via Google</a>
+  </section>
+
+    {% if form.errors %}
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Your E-commerce Store. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ category.name }} - E-commerce Store</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <ul>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'login' %}">Login</a></li>
+      <li><a href="{% url 'signup' %}">Signup</a></li>
+      <li><a href="{% url 'cart' %}">Cart</a></li>
+    </ul>
+  </nav>
+
+  <!-- Category Title -->
+  <section id="category-title">
+    <h2>{{ category.name }}</h2>
+  </section>
+
+  <!-- Product Grid -->
+  <section id="product-grid">
+    {% if products %}
+      <div class="product-grid">
+        {% for product in products %}
+          <div class="product-card">
+            <a href="{% url 'product_detail' product.id %}">
+              <img src="{{ product.image_url }}" alt="{{ product.name }}">
+              <p>{{ product.name }}</p>
+              <p>${{ product.price }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No products found in this category.</p>
+    {% endif %}
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Your E-commerce Store. All rights reserved.</p>
+  </footer>
+</body>
+</html>

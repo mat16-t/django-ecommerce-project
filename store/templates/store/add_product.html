@@ -1,0 +1,82 @@
+<form id="productForm" method="POST">
+    {% csrf_token %}
+    <label>Product ID:</label><input type="text" name="product_id"><br>
+    <label>Name:</label><input type="text" name="name"><br>
+    <label>Description:</label><textarea name="description"></textarea><br>
+
+    <label>Category:</label>
+    <select name="category" id="categorySelect" onchange="updateVariantFields()">
+        <option value="">Select Category</option>
+        <option value="Phone">Phone</option>
+        <option value="Speaker">Speaker</option>
+        <option value="Laptop">Laptop</option>
+    </select><br>
+
+    <label>Brand:</label><input type="text" name="brand"><br>
+
+    <h3>Specifications (JSON)</h3>
+    <textarea name="specifications">{}</textarea><br>
+
+    <h3>Variants</h3>
+    <div id="variants"></div>
+
+    <button type="button" onclick="addVariant()">Add Another Variant</button><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+
+<script>
+function addVariant() {
+    const variantHTML = `
+    <div class="variant">
+        <label>Variant ID:</label><input type="text" name="variant_id"><br>
+        <label>Storage:</label><input type="text" name="storage"><br>
+        <label>Color:</label><input type="text" name="color"><br>
+        <label>Price:</label><input type="number" name="price"><br>
+        <label>Stock:</label><input type="number" name="stock"><br>
+        <label>Image URL:</label><input type="text" name="image_url"><br>
+    </div>
+    `;
+    document.getElementById("variants").insertAdjacentHTML('beforeend', variantHTML);
+}
+
+document.getElementById("productForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    const data = {
+        product_id: formData.get('product_id'),
+        name: formData.get('name'),
+        description: formData.get('description'),
+        category: formData.get('category'),
+        brand: formData.get('brand'),
+        // image_url: formData.get('image_url'),
+        specifications: JSON.parse(formData.get('specifications') || '{}'),
+        variants: []
+    };
+
+    const variantDivs = document.querySelectorAll(".variant");
+    variantDivs.forEach(variant => {
+        data.variants.push({
+            variant_id: variant.querySelector('[name="variant_id"]').value,
+            storage: variant.querySelector('[name="storage"]').value,
+            color: variant.querySelector('[name="color"]').value,
+            price: parseFloat(variant.querySelector('[name="price"]').value),
+            stock: parseInt(variant.querySelector('[name="stock"]').value),
+            image_url: variant.querySelector('[name="image_url"]').value,
+        });
+    });
+
+    const response = await fetch("", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    alert(result.message || result.error);
+});
+</script>

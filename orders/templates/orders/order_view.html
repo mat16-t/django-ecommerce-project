@@ -1,0 +1,24 @@
+{% extends "orders/order_success.html" %}
+
+{% block content %}
+  <h2>Your Orders</h2>
+
+  {% if orders %}
+    {% for order in orders %}
+      <div style="margin-bottom: 30px;">
+        <h3>Order #{{ order.id }} — {{ order.created_at|date:"d M Y H:i" }}</h3>
+        <p>Status: {{ order.status }}</p>
+        <p>Total: ₹{{ order.total_amount }}</p>
+
+        <ul>
+          {% for item in order.orderitem_set.all %}
+            <li>{{ item.product.name }} — Quantity: {{ item.quantity }} — ₹{{ item.price }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You haven't placed any orders yet.</p>
+  {% endif %}
+
+{% endblock %}
