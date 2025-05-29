@@ -134,37 +134,37 @@ def order_detail(request, order_id):
         "items": product_data.values()
     })
 
-def initiate_payment(request, order_id):
-    order = Order.objects.get(id=order_id)
+# def initiate_payment(request, order_id):
+#     order = Order.objects.get(id=order_id)
 
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-    razorpay_order = client.order.create({
-        "amount": int(order.total_amount * 100),  # Amount in paise
-        "currency": "INR",
-        "payment_capture": 1
-    })
+#     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+#     razorpay_order = client.order.create({
+#         "amount": int(order.total_amount * 100),  # Amount in paise
+#         "currency": "INR",
+#         "payment_capture": 1
+#     })
 
-    order.razorpay_order_id = razorpay_order['id']
-    order.save()
+#     order.razorpay_order_id = razorpay_order['id']
+#     order.save()
 
-    context = {
-        "order": order,
-        "razorpay_key_id": settings.RAZORPAY_KEY_ID,
-        "razorpay_order_id": razorpay_order['id'],
-        "amount": order.total_amount,
-        "user": request.user
-    }
-    return render(request, 'orders/payment_page.html', context)
+#     context = {
+#         "order": order,
+#         "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+#         "razorpay_order_id": razorpay_order['id'],
+#         "amount": order.total_amount,
+#         "user": request.user
+#     }
+#     return render(request, 'orders/payment_page.html', context)
 
 
-@csrf_exempt
-def payment_success(request):
-    payment_id = request.GET.get('payment_id')
-    order_id = request.GET.get('order_id')
+# @csrf_exempt
+# def payment_success(request):
+#     payment_id = request.GET.get('payment_id')
+#     order_id = request.GET.get('order_id')
     
-    order = Order.objects.get(id=order_id)
-    order.payment_id = payment_id
-    order.status = 'Paid'
-    order.save()
+#     order = Order.objects.get(id=order_id)
+#     order.payment_id = payment_id
+#     order.status = 'Paid'
+#     order.save()
     
-    return render(request, 'orders/payment_success.html', {'order': order})
+#     return render(request, 'orders/payment_success.html', {'order': order})

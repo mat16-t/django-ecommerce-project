@@ -227,5 +227,5 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 
 #payment
-RAZORPAY_KEY_ID = 'your_key_id_here'
-RAZORPAY_KEY_SECRET = 'your_key_secret_here'
+RAZORPAY_KEY_ID = config('RAZORPAY_ID')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_SECRET')
